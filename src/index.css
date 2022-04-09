@@ -35,3 +35,9 @@ code {
   height: 450px;
 
 }
+
+.center-button{
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}

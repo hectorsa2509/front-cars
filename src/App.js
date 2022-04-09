@@ -7,7 +7,9 @@ function App() {
   const [available, setAvailable] = useState(false)
   const [open, setOpen] = useState(false)
   const [openGas, setOpenGas] = useState(false)
+  const [openCar, setOpenCar] = useState(false)
   const [location, setLocation] = useState("")
+  const [newLocation, setNewLocation] = useState("")
   const [gas, setGas] = useState(0)
   const [id, setId] = useState(0)
   const options = [
@@ -52,6 +54,18 @@ function App() {
     })
   }
 
+
+  const newCar = () => {
+    axios.post(`https://api-rest-cars.herokuapp.com/api/car`, {
+      "location": newLocation,
+    }).then(resp => {
+
+      window.location.reload(false);
+
+    }).catch(err => {
+      window.location.reload(false);
+    })
+  }
   const updateCar = () => {
     axios.patch(`https://api-rest-cars.herokuapp.com/api/car/${id}`, {
       "fuel_consumption": parseInt(gas)
@@ -80,6 +94,7 @@ function App() {
   const handleOnchangeSelected = (e) => {
     console.log("Location Selected!!");
     setLocation(e.target.value);
+    setNewLocation(e.target.value);
 
   }
 
@@ -94,8 +109,12 @@ function App() {
     setOpen(!open)
   }
 
+  const handleNewCar = (e) => {
+    setOpenCar(!openCar)
+  }
+
   const handleCloseModalGas = (e) => {
-    setOpenGas(!open)
+    setOpenGas(!openGas)
   }
 
   useEffect(() => {
@@ -123,6 +142,27 @@ function App() {
   </div >
 
 
+  const modalNewCar = <div>
+
+    <ReactModal isOpen={openCar} className="modals" >
+      <h2 className='center-text' >Agregar nuevo carro</h2>
+      <button onClick={handleCloseModal}>Cerrar modal</button>
+      <div className="select-container">
+        <p>Seleccionar ubicación</p>
+        <select onChange={handleOnchangeSelected}>
+          {options.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+      <div>Ubicación seleccionada: {location}</div>
+      <button onClick={newCar}>Agregar</button>
+
+
+    </ReactModal>
+  </div >
+
+
   const modalUpdateCar = <div>
     <ReactModal isOpen={openGas} className="modals">
       <h2 className='center-text' >Cargar gasolina para el carro {id}</h2>
@@ -139,10 +179,10 @@ function App() {
 
       <li>Carro con id <b>{car.id}</b></li>
       <li>Ubicación actual <b>{car.current_location} </b></li>
-      <li>Distancia recorrida {car.distance}</li>
+      <li>Distancia recorrida <b>{car.distance} km</b> </li>
       <li>Última ubicación <b>{car.last_location ? car.last_location : "No tiene"}</b></li>
-      <li>Gasolina consumida {car.fuel_consumed}</li>
-      <li>Gasolina total {car.fuel_consumption}</li>
+      <li>Gasolina consumida  <b>{car.fuel_consumed} litros</b></li>
+      <li>Gasolina total <b>{car.fuel_consumption} litros</b></li>
       <button onClick={() => handleOnchangeGas(car.id)} >Actualizar auto</button>
       <button onClick={() => handleOnchange(car.id)}>Actualizar ubicación</button>
 
@@ -156,10 +196,15 @@ function App() {
   return (
     <div>
       <h1 className='center-text'>Sistema de localización de autos</h1>
+      <div className='center-button'>
+      <button onClick={handleNewCar} >Agregar auto</button>
+      </div>
+     
       <img className='photo' src="https://source.unsplash.com/featured/?delivery"></img>
       <ul>{nameList}</ul>
       {modalUpdateLocation}
       {modalUpdateCar}
+      {modalNewCar}
     </div>
   );
 }
