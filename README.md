@@ -2,9 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## NODE VERSION 
+14
+
+## STEPS
+0. run command `npm install`
+0. run command `npm start`
+
+
+### URL TESTING
+https://front-delivery-app.herokuapp.com/
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm install`
 
 ### `npm start`
 
